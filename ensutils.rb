@@ -4,6 +4,7 @@ require 'yaml'
 # require 'digest/sha3'
 require 'pry'
 require_relative './encoding.rb'
+require_relative './crypto.rb'
 
 
 @config = YAML::load(File.open('config.yml'))
@@ -12,15 +13,6 @@ Path = @config['ipc_path']
 
 def connect
   client = Ethereum::IpcClient.new(Path)
-end
-
-
-class Web3
-
-  def self.sha3(text)
-    Digest::SHA3.hexdigest(text, 256)
-  end
-
 end
 
 
@@ -47,10 +39,12 @@ module ENSUtils
     return node.to_s;
   end
 
-  private
+  # private
 
-  def sha3(s)
-    Web3.sha3(s)
+  def sha3(s,**options)
+    binding.pry
+    s = Encoder.hex_to_byte_string(s) if options[:encoding] == :hex
+    Crypto.sha3(s)
   end
 
 
@@ -58,7 +52,5 @@ end
 
 
 class Api
-
  extend ENSUtils
-
 end

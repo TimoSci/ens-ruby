@@ -1,5 +1,4 @@
-
-# module Encode
+module Encode
 
   def hex_to_byte_string(string)
     string = chop_hex(string)
@@ -21,4 +20,8 @@
     string
   end
 
-# end
+end
+
+class Encoder
+  extend Encode
+end
