@@ -1,6 +1,6 @@
 gem 'ethereum.rb'
 
-gem 'ethereum'
+# gem 'ethereum'
 
 gem 'rspec'
 
