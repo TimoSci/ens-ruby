@@ -28,22 +28,22 @@ module ENSUtils
   # end
 
   def namehash(name)
-    node = '0x0000000000000000000000000000000000000000000000000000000000000000';
+    node = '0' * 64
     if (name != '')
-      labels = name.split(".");
-      labels.each do |label|
-        binding.pry
-        node = sha3(node + sha3(label).slice(2..-1));
+      name.split('.').reverse.each do |label|
+        node = sha3(node + sha3(label),encoding: :hex);
       end
     end
-    return node.to_s;
+    node
   end
 
-  # private
+  private
 
   def sha3(s,**options)
-    binding.pry
-    s = Encoder.hex_to_byte_string(s) if options[:encoding] == :hex
+    case options[:encoding]
+    when :hex
+      s = Encoder.hex_to_byte_string(s)
+    end
     Crypto.sha3(s)
   end
 
