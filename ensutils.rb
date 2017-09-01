@@ -3,9 +3,13 @@ require 'ethereum.rb'
 require 'yaml'
 # require 'digest/sha3'
 require 'pry'
+# require 'eth'
 require_relative './encoding.rb'
 require_relative './crypto.rb'
+# require_relative '../ethereum.rb/lib/ethereum.rb'
 
+ENS_CONTRACT_ADDRESS = "0x314159265dd8dbb310642f98f50c066173c1259b"
+CONTRACTS = "./contracts"
 
 @config = YAML::load(File.open('config.yml'))
 Path = @config['ipc_path']
@@ -15,6 +19,9 @@ def connect
   client = Ethereum::IpcClient.new(Path)
 end
 
+def ens_contract
+  Ethereum::Contract.create(file: "#{CONTRACTS}/ENS.sol", address: ENS_CONTRACT_ADDRESS )
+end
 
 module ENSUtils
 
@@ -34,7 +41,7 @@ module ENSUtils
         node = sha3(node + sha3(label),encoding: :hex);
       end
     end
-    node
+    '0x'+node
   end
 
   private
