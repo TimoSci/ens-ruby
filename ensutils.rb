@@ -23,7 +23,17 @@ def ens_contract
   Ethereum::Contract.create(file: "#{CONTRACTS}/ENS.sol", address: ENS_CONTRACT_ADDRESS )
 end
 
+def owner(name)
+  ens_contract.call.owner(Encoder.hex_to_byte_string(Api::Base.new.namehash(name)))
+end
+
 module ENSUtils
+
+  class Base
+
+  def initialize(crypto:Crypto)
+    @crypto = crypto
+  end
 
   # def namehash(name)
   #   if name == ''
@@ -46,12 +56,16 @@ module ENSUtils
 
   private
 
+  attr_reader :crypto
+
   def sha3(s,**options)
     case options[:encoding]
     when :hex
       s = Encoder.hex_to_byte_string(s)
     end
-    Crypto.sha3(s)
+    crypto.sha3(s)
+  end
+
   end
 
 
@@ -59,5 +73,5 @@ end
 
 
 class Api
- extend ENSUtils
+ include ENSUtils
 end
